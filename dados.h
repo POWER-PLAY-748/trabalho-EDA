@@ -20,8 +20,8 @@
 
   // Estrutura da Antena
 typedef struct Antena {
-	char freq; // Frequência da antena
-	int x, y; // Coordenadas da antena
+	char freq; 
+	int x, y; 
 	struct Antena* prox; // Ponteiro para a próxima antena
 } Antena;
 /**
@@ -29,6 +29,34 @@ typedef struct Antena {
  */
  // Estrutura do Efeito Nefasto
 typedef struct EfeitoNefasto {
-	int x, y; // Coordenadas do efeito nefasto
+	int x, y; 
 	struct EfeitoNefasto* prox;	// Ponteiro para o próximo efeito nefasto
 } EfeitoNefasto; 
+/**
+ * \brief Estrutura que representa um vértice do grafo.
+ */
+ // Estrutura do Vértice
+typedef struct Vertice {
+	int id;
+	char freq;
+	int x, y;
+	struct Aresta* adjacentes; // Lista de arestas (adjacências)
+	struct Vertice* prox;      
+} Vertice;
+/**
+ * \brief Estrutura que representa uma aresta do grafo.
+ */
+ // Estrutura da Aresta
+typedef struct Aresta {
+	int destino; // ID do vértice de destino
+	struct Aresta* prox;
+} Aresta;
+/**
+ * \brief Estrutura que representa um grafo.
+ */
+ // Estrutura do Grafo
+typedef struct GR {
+	int numVertices;
+	Vertice* inicio; // Ponteiro para o início da lista de vértices
+} GR;
+
