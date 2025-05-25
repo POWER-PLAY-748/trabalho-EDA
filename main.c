@@ -85,7 +85,7 @@ int main() {
                     scanf("%d", &x);
                     printf("Coordenada Y: ");
                     scanf("%d", &y);
-                    Antena* resultado = InserirAntena(lista, freq, x, y);
+                    Antena* resultado = InserirAntena(lista, freq, x, y); 
                     if (resultado == NULL) {
                         printf("Coordenadas fora do grid 10x10!\n");
                     }
@@ -113,7 +113,7 @@ int main() {
                     lista = RemoverAntena(lista, freq, x, y, &removida);
                     SalvarAntenasEmFicheiroBin(lista);
                     SalvarAntenasEmTxt(lista, "antenas.txt");
-                    if (removida)
+                    if (removida != 0)
                         printf("Antena removida.\n");
                     else
                         printf("Antena não encontrada.\n");
@@ -127,10 +127,9 @@ int main() {
                         printf("Lista de efeitos nefastos destruida com sucesso.\n");
                     }
                     efeitos = efeitoNefasto(lista);
-                    SalvarAntenasEmTxt(lista, "antenas.txt");
 
                     // Exibir a lista de antenas e efeitos
-                    lista = ListarAntenas(lista, efeitos);
+                    ListarAntenas(lista, efeitos);
                     break;
                 }
                 case 4:

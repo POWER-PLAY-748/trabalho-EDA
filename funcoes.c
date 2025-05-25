@@ -30,7 +30,6 @@ Antena* CriarAntena(char freq, int x, int y) {
     return aux; // Retorna o ponteiro para a nova antena
 }
 
-
 /**
  * \brief Insere uma antena na lista de forma ordenada.
  *
@@ -76,9 +75,9 @@ Antena* InserirAntena(Antena* inicio, char freq, int x, int y) {
  */
 
 Antena* RemoverAntena(Antena* h, char freq, int x, int y, int* removida) {
-    Antena* aux = h;
-    Antena* anterior = NULL;
-    *removida = 0;
+    Antena* aux = h; 
+	Antena* anterior = NULL; // Ponteiro para o elemento anterior na lista
+    *removida = 0; 
     while (aux != NULL) {
         if (aux->freq == freq && aux->x == x && aux->y == y) {
 			if (anterior == NULL) // Se a antena a ser removida é a primeira da lista
@@ -303,18 +302,18 @@ EfeitoNefasto* efeitoNefasto(Antena* inicio) {
     }
 
     EfeitoNefasto* efeitos = NULL; // Inicializa a lista de efeitos nefastos como NULL
-    EfeitoNefasto* aux;
-    Antena* current = inicio;
-    Antena* compare;
+    EfeitoNefasto* aux; 
+    Antena* current = inicio; 
+    Antena* compare;  
 
     while (current != NULL) {
-        compare = current->prox;
+		compare = current->prox; // Começa a comparar com as antenas seguintes
         while (compare != NULL) {
             if (current->freq == compare->freq) { // Verifica se as antenas têm a mesma frequência
                 if ((current->x == compare->x) && (current->y != compare->y)) { // Verifica se as antenas estão na mesma coordenada x e em coordenadas y diferentes
                     int subtracao = current->y - compare->y; // Calcula a diferença entre as coordenadas y
                     int nefy = current->y + subtracao; // Calcula a coordenada y do efeito nefasto
-                    int nefy1 = compare->y - subtracao; 
+                    int nefy1 = compare->y - subtracao;
                     aux = CriarEfeito(current->x, nefy);
                     efeitos = InserirEfeito(efeitos, aux->x, aux->y); 
                     aux = CriarEfeito(compare->x, nefy1); 
@@ -435,7 +434,7 @@ bool InserirVertice(GR* g, int id, char freq, int x, int y) {
     if (x < 0 || x >= GRID_TAM || y < 0 || y >= GRID_TAM) return false;
 
     // Verifica duplicados
-    Vertice* v = g->inicio;
+    Vertice* v = g->inicio; //
     while (v != NULL) {
         if (v->x == x && v->y == y) {
             return false; // Já existe vértice nessas coordenadas
@@ -445,7 +444,9 @@ bool InserirVertice(GR* g, int id, char freq, int x, int y) {
 
     // Cria o novo vértice
     Vertice* novo = CriarVertice(id, freq, x, y);
-    if (novo == NULL) return false;
+    if (novo == NULL) {
+		return false; // Falha ao alocar memória para o novo vértice
+    }
 
     // Insere no início da lista
     novo->prox = g->inicio;
@@ -501,20 +502,22 @@ void MostrarVertices(GR* g) {
  * \return true se as arestas foram inseridas com sucesso, false caso contrário.
  */
 bool InserirAresta(GR* g, Vertice* novo) {
-    if (g == NULL || novo == NULL) return false;
+    if (g == NULL || novo == NULL) {
+        return false;
+	}
     Vertice* v = g->inicio;
     while (v != NULL) {
-        if (v != novo && v->freq == novo->freq) {
+		if (v != novo && v->freq == novo->freq) { // Verifica se o vértice atual tem a mesma frequência que o novo
             // Verifica se já existe a ligação
-            Aresta* a = novo->adjacentes;
+            Aresta* a = novo->adjacentes; 
             while (a != NULL) {
                 if (a->destino == v->id) {
                     break; // Já existe, não cria
                 }
                 a = a->prox;
             }
-            if (a == NULL) {
-                // Liga nos dois sentidos (grafo não orientado)
+			if (a == NULL) { // Se não encontrou aresta com o destino igual ao ID do vértice atual
+                // Liga nos dois sentidos 
                 Aresta* a1 = CriarAresta(v->id);
                 if (a1 != NULL) {
                     a1->prox = novo->adjacentes;
@@ -548,15 +551,15 @@ bool RemoverArestas(GR* g, int id) {
     // Remove arestas de outros vértices que apontam para 'id'
     while (v != NULL) {
         if (v->id != id) {
-            Aresta* a = v->adjacentes;
+            Aresta* a = v->adjacentes; 
             Aresta* ant = NULL;
             while (a != NULL) {
-                if (a->destino == id) {
+				if (a->destino == id) { // Verifica se a aresta aponta para o vértice com o ID especificado
                     if (ant != NULL) {
-                        ant->prox = a->prox;
+						ant->prox = a->prox; // Remove a aresta do vértice atual
                     }
                     else {
-                        v->adjacentes = a->prox;
+                        v->adjacentes = a->prox; 
                     }
                     free(a);
                     return true; // Removeu uma aresta, retorna imediatamente
@@ -569,18 +572,18 @@ bool RemoverArestas(GR* g, int id) {
     }
     // Remove todas as arestas do próprio vértice
     Vertice* alvo = g->inicio;
-    while (alvo != NULL && alvo->id != id) {
+    while (alvo != NULL && alvo->id != id) { 
         alvo = alvo->prox;
     }
-    if (alvo != NULL && alvo->adjacentes != NULL) {
-        Aresta* a = alvo->adjacentes;
+    if (alvo != NULL && alvo->adjacentes != NULL) {  
+        Aresta* a = alvo->adjacentes;  
         while (a != NULL) {
-            Aresta* temp = a;
+			Aresta* temp = a; // Salva o ponteiro da aresta a ser removida
             a = a->prox;
-            free(temp);
+            free(temp); 
             return true; // Removeu pelo menos uma aresta do próprio vértice
         }
-        alvo->adjacentes = NULL;
+        alvo->adjacentes = NULL; 
     }
     return false; // Não removeu nenhuma aresta
 }
@@ -722,8 +725,8 @@ Vertice* CarregarGrafoDeTxt(const char* nomeFicheiro) {
     if (ficheiro == NULL) {
         return NULL;
     }
-    Vertice* lista = NULL;
-    int id = 1;
+    Vertice* lista = NULL; 
+	int id = 1; // Inicializa o ID dos vértices
     for (int i = 0; i < GRID_TAM; i++) {
         for (int j = 0; j < GRID_TAM; j++) {
             char simbolo;
@@ -752,30 +755,18 @@ bool SalvarGrafoEmBin(Vertice* lista, const char* nomeFicheiro) {
     if (ficheiro == NULL) {
         return false;
     }
-    for (int i = 0; i < GRID_TAM; i++) {
-        for (int j = 0; j < GRID_TAM; j++) {
-            char simbolo = '.';
-            Vertice* aux = lista;
-			while (aux != NULL) { // Percorre a lista de vértices
-                if (aux->x == j && aux->y == i) {
-                    simbolo = aux->freq;
-                    break;
-                }
-				aux = aux->prox; // Avança para o próximo vértice na lista
-            }
-            fwrite(&simbolo, sizeof(char), 1, ficheiro);
-        }
+
+    Vertice* aux = lista;
+    while (aux != NULL) { // Percorre a lista de vértices
+        fwrite(&(aux->freq), sizeof(char), 1, ficheiro);
+        fwrite(&(aux->x), sizeof(int), 1, ficheiro);
+        fwrite(&(aux->y), sizeof(int), 1, ficheiro);
+        aux = aux->prox;
     }
+
     fclose(ficheiro);
     return true;
 }
-
-/**
- * \brief Carrega o grafo de um ficheiro binário.
- *
- * \param nomeFicheiro Nome do ficheiro binário a ser carregado.
- * \return Ponteiro para a lista de vértices ou NULL se ocorrer um erro.
- */
 
 Vertice* CarregarGrafoDeBin(const char* nomeFicheiro) {
     FILE* ficheiro = fopen(nomeFicheiro, "rb");
@@ -783,18 +774,15 @@ Vertice* CarregarGrafoDeBin(const char* nomeFicheiro) {
         return NULL;
     }
     Vertice* lista = NULL;
+    char freq;
+    int x, y;
     int id = 1;
-    for (int i = 0; i < GRID_TAM; i++) {
-        for (int j = 0; j < 10; j++) {
-            char simbolo;
-            if (fread(&simbolo, sizeof(char), 1, ficheiro) == 1) {
-                if (simbolo != '.') {
-                    Vertice* novo = CriarVertice(id++, simbolo, j, i);
-                    novo->prox = lista;
-                    lista = novo;
-                }
-            }
-        }
+    while (fread(&freq, sizeof(char), 1, ficheiro) == 1 &&
+        fread(&x, sizeof(int), 1, ficheiro) == 1 &&
+        fread(&y, sizeof(int), 1, ficheiro) == 1) {
+        Vertice* novo = CriarVertice(id++, freq, x, y);
+        novo->prox = lista;
+        lista = novo;
     }
     fclose(ficheiro);
     return lista;
